@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eDC Launchpad - Explore Resources</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Navigation Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content Area -->
+    <main class="main-content animate-fade-in">
+      <!-- Search Input -->
+      <div class="search-container">
+        <span class="material-symbols-outlined search-icon" style="font-variation-settings: 'FILL' 0">search</span>
+        <input type="text" id="resource-search" class="search-input" placeholder="Search resources, authors, or descriptions...">
+      </div>
+
+      <!-- Filter and Tabs Bar -->
+      <div class="filter-bar">
+        <div class="stages-row">
+          <span class="stages-label">Stages:</span>
+          <button class="filter-btn-pill active" data-stage="all">All</button>
+          <button class="filter-btn-pill" data-stage="explorer">Explorer</button>
+          <button class="filter-btn-pill" data-stage="builder">Builder</button>
+          <button class="filter-btn-pill" data-stage="launcher">Launcher</button>
+          <button class="filter-btn-pill" data-stage="scaler">Scaler</button>
+        </div>
+        
+        <div class="tabs-row">
+          <button class="tab-btn active" data-type="books">Books</button>
+          <button class="tab-btn" data-type="podcasts">Podcasts</button>
+          <button class="tab-btn" data-type="videos" disabled style="opacity: 0.5; cursor: not-allowed;">Videos</button>
+          <button class="tab-btn" data-type="courses" disabled style="opacity: 0.5; cursor: not-allowed;">Courses</button>
+        </div>
+      </div>
+
+      <!-- Grid view containers -->
+      <div id="resources-section">
+        <!-- Curated Books -->
+        <section id="books-section" style="display: block;">
+          <div class="section-header">
+            <h2 class="font-headline-md">Curated Books</h2>
+            <button class="btn btn-secondary btn-icon-sm" id="btn-view-all-books" style="border: none;">View All</button>
+          </div>
+          <div class="grid-books" id="books-grid-container">
+            <!-- Rendered dynamically by script -->
+          </div>
+        </section>
+
+        <!-- Top Podcasts -->
+        <section id="podcasts-section" style="display: none; margin-top: 1rem;">
+          <div class="section-header">
+            <h2 class="font-headline-md">Top Podcasts</h2>
+            <button class="btn btn-secondary btn-icon-sm" id="btn-view-all-podcasts" style="border: none;">View All</button>
+          </div>
+          <div class="grid-podcasts" id="podcasts-grid-container">
+            <!-- Rendered dynamically by script -->
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Leaderboard Sidebar -->
+    <div id="leaderboard-container"></div>
+  </div>
+
+  <!-- Podcast Video Player Modal Overlay -->
+  <div id="podcast-modal-backdrop" class="modal-backdrop" onclick="closePodcastModal(event)">
+    <div class="modal-container" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modal-podcast-title">Podcast Player</h3>
+        <button class="modal-close-btn" onclick="closePodcastModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal-podcast-body">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Javascript -->
+  <script src="db.js"></script>
+  <script src="xp.js"></script>
+
+  <!-- Page Logic JS -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let currentStage = 'all';
+      let currentType = 'books';
+      let searchQuery = '';
+
+      // Initialize stage filter from URL params if present
+      const urlParams = new URLSearchParams(window.location.search);
+      const stageParam = urlParams.get('stage');
+      if (stageParam) {
+        currentStage = stageParam.toLowerCase();
+        document.querySelectorAll('.filter-btn-pill').forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.getAttribute('data-stage') === currentStage) {
+            btn.classList.add('active');
+          }
+        });
+      }
+
+      const getCompletedResources = () => {
+        const saved = localStorage.getItem("completed_resources");
+        return saved ? JSON.parse(saved) : { "lean-startup": true };
+      };
+
+      const setCompletedResource = (id) => {
+        const completed = getCompletedResources();
+        completed[id] = true;
+        localStorage.setItem("completed_resources", JSON.stringify(completed));
+        window.dispatchEvent(new Event("xp-updated"));
+        if (window.updateXPUI) window.updateXPUI();
+      };
+
+      // Render Books Grid
+      const renderBooks = () => {
+        const grid = document.getElementById("books-grid-container");
+        if (!grid) return;
+
+        const completed = getCompletedResources();
+        const query = searchQuery.toLowerCase().trim();
+
+        const filtered = (window.booksData || []).filter(book => {
+          const matchesStage = currentStage === 'all' || book.stage.includes(currentStage);
+          const matchesSearch = query === '' || 
+                                book.title.toLowerCase().includes(query) || 
+                                book.author.toLowerCase().includes(query) || 
+                                book.description.toLowerCase().includes(query);
+          return matchesStage && matchesSearch;
+        });
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `<div style="grid-column: 1 / -1; padding: 3rem 0; text-align: center; color: var(--color-on-surface-variant);">No books found matching the selected filters.</div>`;
+          return;
+        }
+
+        grid.innerHTML = filtered.map(book => {
+          const isDone = completed[book.id];
+          return `
+            <div class="glass-card" style="border-radius: 0.75rem; overflow: hidden; display: flex; flex-direction: column; cursor: pointer;" onclick="window.location.href='book.html?id=${book.id}'">
+              <div class="card-img-wrapper">
+                <img src="${book.coverUrl}" alt="${book.title}">
+                ${isDone ? `
+                  <div class="card-check">
+                    <span class="material-symbols-outlined text-sm font-bold">check</span>
+                  </div>
+                ` : ''}
+                <div class="card-xp-badge">+${book.xp} XP</div>
+              </div>
+              <div class="card-body">
+                <h3 class="font-label-md">${book.title}</h3>
+                <p class="card-author">By ${book.author}</p>
+                <!-- Stage Tags -->
+                <div style="display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.375rem; margin-bottom: 0.75rem;">
+                  ${book.stage.map(stg => `<span class="stage-tag" style="border-color: rgba(78, 222, 163, 0.15); color: var(--color-secondary); font-size: 0.625rem; padding: 0.125rem 0.5rem; border-radius: 99px;">${stg}</span>`).join('')}
+                </div>
+                <div class="rating-row">
+                  <span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1">star</span>
+                  <strong>${book.rating}</strong> (${book.reviews} reviews)
+                </div>
+                
+                ${isDone ? `
+                  <button class="btn btn-completed btn-icon-sm" style="margin-top: auto; width: 100%;" onclick="event.stopPropagation();">Completed</button>
+                ` : `
+                  <button class="btn btn-primary btn-icon-sm" style="margin-top: auto; width: 100%;" onclick="event.stopPropagation(); handleMarkDone('${book.id}')">Mark as Done</button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      // Render Podcasts Grid
+      const renderPodcasts = () => {
+        const grid = document.getElementById("podcasts-grid-container");
+        if (!grid) return;
+
+        const completed = getCompletedResources();
+        const query = searchQuery.toLowerCase().trim();
+
+        const filtered = (window.podcastsData || []).filter(podcast => {
+          const matchesSearch = query === '' || 
+                                podcast.title.toLowerCase().includes(query) || 
+                                podcast.host.toLowerCase().includes(query) || 
+                                podcast.summary.toLowerCase().includes(query);
+          return matchesSearch;
+        });
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `<div style="grid-column: 1 / -1; padding: 3rem 0; text-align: center; color: var(--color-on-surface-variant);">No podcasts found matching the selected search query.</div>`;
+          return;
+        }
+
+        grid.innerHTML = filtered.map(podcast => {
+          const isDone = completed[podcast.id];
+          return `
+            <div class="glass-card podcast-card" style="cursor: pointer;" onclick="openPodcastModal('${podcast.id}')">
+              <div class="podcast-img-wrapper">
+                <img src="${podcast.coverUrl}" alt="${podcast.title}">
+                <div class="podcast-play-overlay">
+                  <span class="material-symbols-outlined text-primary" style="font-size: 3rem;">play_circle</span>
+                </div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
+                    <div>
+                      <h3 class="font-headline-md" style="font-size: 1.125rem; margin-bottom: 0.25rem; line-clamp: 1;">${podcast.title}</h3>
+                      <p class="font-body-sm" style="margin-bottom: 0.5rem;">${podcast.host}</p>
+                    </div>
+                    <span class="text-primary font-label-md" style="background: rgba(173, 198, 255, 0.1); border: 1px solid rgba(173, 198, 255, 0.2); padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.625rem; flex-shrink: 0;">+${podcast.xp} XP</span>
+                  </div>
+                  <p class="font-body-sm line-clamp-2" style="margin-bottom: 0.75rem; color: var(--color-on-surface-variant); line-height: 1.4;">${podcast.summary}</p>
+                  <!-- Category Tags -->
+                  <div style="display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.75rem;">
+                    ${podcast.tags.map(tag => `<span class="stage-tag" style="border-color: rgba(173, 198, 255, 0.15); color: var(--color-primary); font-size: 0.625rem; padding: 0.125rem 0.5rem; border-radius: 99px;">${tag}</span>`).join('')}
+                  </div>
+                  <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.75rem; color: var(--color-on-surface-variant);">
+                    <div style="display: flex; align-items: center; gap: 0.125rem;">
+                      <span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1; font-size: 0.875rem;">star</span>
+                      <span>${podcast.rating}</span>
+                    </div>
+                    <span>${podcast.episodes}</span>
+                  </div>
+                </div>
+                
+                ${isDone ? `
+                  <button class="btn btn-completed btn-icon-sm" style="margin-top: 1rem; width: fit-content; font-size: 0.75rem;" onclick="event.stopPropagation();">Completed</button>
+                ` : `
+                  <button class="btn btn-primary btn-icon-sm" style="margin-top: 1rem; width: fit-content; font-size: 0.75rem;" onclick="event.stopPropagation(); handleMarkDonePodcast('${podcast.id}')">Mark as Done</button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      // Handle Mark as Done from card click
+      window.handleMarkDone = (id) => {
+        setCompletedResource(id);
+        renderBooks();
+      };
+
+      window.handleMarkDonePodcast = (id) => {
+        setCompletedResource(id);
+        renderPodcasts();
+      };
+
+      // Extract YouTube Video ID and format embed URL
+      const getYouTubeEmbedUrl = (url) => {
+        let videoId = '';
+        if (url.includes('v=')) {
+          videoId = url.split('v=')[1].split('&')[0];
+        } else if (url.includes('youtu.be/')) {
+          videoId = url.split('youtu.be/')[1].split('?')[0];
+        }
+        return `https://www.youtube.com/embed/${videoId}`;
+      };
+
+      const getBookmarkedResources = () => {
+        const saved = localStorage.getItem("bookmarked_resources");
+        return saved ? JSON.parse(saved) : {};
+      };
+
+      // Modal management functions
+      let currentActivePodcastId = null;
+
+      window.openPodcastModal = (podcastId) => {
+        currentActivePodcastId = podcastId;
+        const podcast = (window.podcastsData || []).find(p => p.id === podcastId);
+        if (!podcast) return;
+
+        document.getElementById("modal-podcast-title").innerText = podcast.title;
+        
+        const completed = getCompletedResources();
+        const bookmarks = getBookmarkedResources();
+        const isDone = completed[podcast.id];
+        const isBookmarked = bookmarks[podcast.id];
+        const embedUrl = getYouTubeEmbedUrl(podcast.youtubeUrl);
+
+        const modalBody = document.getElementById("modal-podcast-body");
+        modalBody.innerHTML = `
+          <!-- Left Column: Video and Summary -->
+          <div class="modal-video-col">
+            <div class="modal-video-wrapper">
+              <iframe 
+                src="${embedUrl}?autoplay=1" 
+                title="${podcast.title}" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div>
+              <h4 class="font-label-md" style="color: var(--color-primary); margin-bottom: 0.5rem;">📝 Summary</h4>
+              <p class="font-body-md" style="line-height: 1.6; color: var(--color-on-surface-variant);">${podcast.summary}</p>
+            </div>
+            <!-- Category Tags -->
+            <div>
+              <h4 class="font-label-md" style="color: var(--color-primary); margin-bottom: 0.5rem;">🏷️ Category Tags</h4>
+              <div class="stage-tags-row">
+                ${podcast.tags.map(tag => `<span class="stage-tag" style="border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary);">${tag}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Host info, stats, key insights, actions -->
+          <div class="modal-details-col">
+            <div class="glass-card" style="padding: 1.25rem; border-radius: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span class="font-body-sm" style="display: block; opacity: 0.7;">Host</span>
+                  <p class="font-label-md text-primary" style="font-size: 1rem; margin-top: 0.125rem;">${podcast.host}</p>
+                </div>
+                <div style="text-align: right;">
+                  <span class="font-body-sm" style="display: block; opacity: 0.7;">Rating</span>
+                  <div style="display: flex; align-items: center; gap: 0.25rem; justify-content: flex-end; margin-top: 0.125rem;">
+                    <span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1; font-size: 1rem;">star</span>
+                    <strong style="color: var(--color-on-surface); font-size: 0.9375rem;">${podcast.rating}</strong>
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; border-top: 1px solid var(--color-outline-variant); padding-top: 0.75rem;">
+                <span class="text-on-surface-variant">${podcast.episodes}</span>
+                <span class="text-secondary font-bold">+${podcast.xp} XP Reward</span>
+              </div>
+            </div>
+
+            <!-- Highlights / Insights if available -->
+            ${podcast.highlights && podcast.highlights.length > 0 ? `
+              <div style="display: flex; flex-direction: column; gap: 0.50rem;">
+                <h4 class="font-label-md" style="color: var(--color-secondary); display: flex; align-items: center; gap: 0.375rem;">
+                  <span class="material-symbols-outlined" style="font-size: 1.125rem;">auto_awesome</span> Key Highlights
+                </h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.625rem; padding-left: 0;">
+                  ${podcast.highlights.slice(0, 3).map(h => `
+                    <li style="display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.875rem; line-height: 1.4;">
+                      <span class="text-secondary" style="font-weight: bold;">•</span>
+                      <span class="text-on-surface-variant">${h}</span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            ` : ''}
+
+            <!-- Core Insights if available -->
+            ${podcast.keyInsights && podcast.keyInsights.length > 0 ? `
+              <div style="display: flex; flex-direction: column; gap: 0.50rem; border-top: 1px solid var(--color-outline-variant); padding-top: 1rem;">
+                <h4 class="font-label-md" style="color: var(--color-tertiary); display: flex; align-items: center; gap: 0.375rem;">
+                  <span class="material-symbols-outlined" style="font-size: 1.125rem;">lightbulb</span> Core Insights
+                </h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.625rem; padding-left: 0;">
+                  ${podcast.keyInsights.slice(0, 2).map(ki => {
+                    const split = ki.split(':');
+                    const title = split[0];
+                    const desc = split.slice(1).join(':');
+                    return `
+                      <li style="display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.875rem; line-height: 1.4;">
+                        <span class="text-tertiary" style="font-weight: bold;">•</span>
+                        <span class="text-on-surface-variant"><strong class="text-tertiary">${title}:</strong>${desc}</span>
+                      </li>
+                    `;
+                  }).join('')}
+                </ul>
+              </div>
+            ` : ''}
+
+            <!-- Action buttons inside modal -->
+            <div style="display: flex; gap: 0.75rem; margin-top: auto; border-top: 1px solid var(--color-outline-variant); padding-top: 1.25rem;">
+              ${isDone ? `
+                <button class="btn btn-completed" style="flex: 1; justify-content: center; font-size: 0.8125rem;"><span class="material-symbols-outlined font-bold" style="font-size: 1rem; margin-right: 0.25rem;">check</span>Completed</button>
+              ` : `
+                <button class="btn btn-primary" style="flex: 1; justify-content: center; font-size: 0.8125rem;" onclick="handleMarkCompletedInModal('${podcast.id}')"><span class="material-symbols-outlined font-bold" style="font-size: 1rem; margin-right: 0.25rem;">check</span>Mark as Done</button>
+              `}
+              <button class="btn btn-secondary ${isBookmarked ? 'btn-bookmark-active' : ''}" style="display: flex; justify-content: center; gap: 0.25rem; font-size: 0.8125rem;" onclick="handleToggleBookmarkInModal('${podcast.id}')">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${isBookmarked ? 1 : 0}; font-size: 1.125rem;">bookmark</span>
+                <span>${isBookmarked ? 'Saved' : 'Save'}</span>
+              </button>
+              <a href="podcast.html?id=${podcast.id}" class="btn btn-secondary btn-icon-sm" style="display: flex; align-items: center; justify-content: center; padding: 0.5rem;" title="View standalone detail page">
+                <span class="material-symbols-outlined" style="font-size: 1.125rem;">open_in_new</span>
+              </a>
+            </div>
+          </div>
+        `;
+
+        const backdrop = document.getElementById("podcast-modal-backdrop");
+        backdrop.classList.add("active");
+        document.body.style.overflow = "hidden"; // Prevent background scroll
+      };
+
+      window.closePodcastModal = (e) => {
+        // If clicking backdrop or direct call
+        const backdrop = document.getElementById("podcast-modal-backdrop");
+        backdrop.classList.remove("active");
+        document.body.style.overflow = ""; // Restore scroll
+        
+        // Remove iframe to stop video playback immediately
+        const modalBody = document.getElementById("modal-podcast-body");
+        modalBody.innerHTML = "";
+        currentActivePodcastId = null;
+      };
+
+      window.handleMarkCompletedInModal = (id) => {
+        setCompletedResource(id);
+        renderPodcasts();
+        // Refresh modal content to show completed state
+        openPodcastModal(id);
+      };
+
+      window.handleToggleBookmarkInModal = (id) => {
+        const bookmarks = getBookmarkedResources();
+        bookmarks[id] = !bookmarks[id];
+        localStorage.setItem("bookmarked_resources", JSON.stringify(bookmarks));
+        window.dispatchEvent(new Event("xp-updated"));
+        if (window.updateXPUI) window.updateXPUI();
+        // Refresh modal content to show bookmarked state
+        openPodcastModal(id);
+      };
+
+      // Hook search input
+      const searchInput = document.getElementById("resource-search");
+      if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+          searchQuery = e.target.value;
+          renderBooks();
+          renderPodcasts();
+        });
+      }
+
+      // Hook stage filters
+      document.querySelectorAll(".filter-btn-pill").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          document.querySelectorAll(".filter-btn-pill").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentStage = btn.getAttribute("data-stage");
+          
+          // Sync URL search params
+          const url = new URL(window.location);
+          if (currentStage === 'all') {
+            url.searchParams.delete('stage');
+          } else {
+            url.searchParams.set('stage', currentStage);
+          }
+          window.history.pushState({}, '', url);
+
+          renderBooks();
+        });
+      });
+
+      // View All Books handler
+      const viewAllBooksBtn = document.getElementById("btn-view-all-books");
+      if (viewAllBooksBtn) {
+        viewAllBooksBtn.addEventListener("click", () => {
+          document.querySelectorAll(".filter-btn-pill").forEach(b => b.classList.remove("active"));
+          const allBtn = document.querySelector('.filter-btn-pill[data-stage="all"]');
+          if (allBtn) allBtn.classList.add("active");
+          currentStage = 'all';
+
+          const url = new URL(window.location);
+          url.searchParams.delete('stage');
+          window.history.pushState({}, '', url);
+
+          renderBooks();
+        });
+      }
+
+      // View All Podcasts handler
+      const viewAllPodcastsBtn = document.getElementById("btn-view-all-podcasts");
+      if (viewAllPodcastsBtn) {
+        viewAllPodcastsBtn.addEventListener("click", () => {
+          searchQuery = '';
+          if (searchInput) searchInput.value = '';
+          renderPodcasts();
+        });
+      }
+
+      // Hook Tab buttons
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentType = btn.getAttribute("data-type");
+
+          const booksSec = document.getElementById("books-section");
+          const podcastsSec = document.getElementById("podcasts-section");
+
+          if (currentType === 'books') {
+            if (booksSec) booksSec.style.display = 'block';
+            if (podcastsSec) podcastsSec.style.display = 'none';
+          } else if (currentType === 'podcasts') {
+            if (booksSec) booksSec.style.display = 'none';
+            if (podcastsSec) podcastsSec.style.display = 'block';
+            renderPodcasts();
+          }
+        });
+      });
+
+      // Listen for external updates (e.g. storage sync)
+      window.addEventListener("xp-updated", () => {
+        renderBooks();
+        renderPodcasts();
+      });
+
+      // Initial Render
+      renderBooks();
+      renderPodcasts();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eDC Launchpad - Launch Startup</title>
+  <link class="symbol" rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Navigation Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content Area -->
+    <main class="main-content animate-fade-in">
+      <div class="space-y-16" style="display: flex; flex-direction: column; gap: 4rem;">
+        
+        <!-- HERO SECTION -->
+        <section class="launch-hero" style="background: linear-gradient(135deg, rgba(var(--bg-overlay-rgb), 0.92) 40%, rgba(var(--bg-overlay-rgb), 0.6) 100%), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop'); background-size: cover; background-position: center; border: 1px solid var(--color-outline-variant); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+          <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; max-width: 42rem;">
+            <div class="hero-tag">
+              <span class="material-symbols-outlined" style="font-size: 0.875rem;">auto_awesome</span>
+              PHASE 01: IGNITION
+            </div>
+            <h1 class="font-display-lg" style="line-height: 1.2; margin: 0 0 0.5rem 0;">Launch Your Startup - <span class="text-primary">From idea to IITD-backed venture.</span></h1>
+            <p class="font-body-lg" style="margin: 0;">The IIT Delhi Entrepreneurship ecosystem is your mission control. Follow the verified flight path to take your idea from paper to a scalable entity.</p>
+          </div>
+          
+          <!-- Progress HUD -->
+          <div class="hud-wrapper" style="margin-top: 0; background: rgba(var(--glass-color-rgb), 0.03); border: 1px solid var(--color-outline-variant); padding: 1.5rem; border-radius: 1.25rem; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+            <div class="text-secondary font-headline-md" id="hud-percent-text" style="font-size: 1.5rem;">0%</div>
+            <div class="progress-track" style="width: 12rem;">
+              <div class="progress-fill secondary emerald-glow" id="hud-progress-fill" style="width: 0%;"></div>
+            </div>
+            <div class="font-label-md text-on-surface-variant" style="font-size: 0.75rem; margin-top: 0.25rem;">Resources Connected</div>
+          </div>
+        </section>
+
+        <!-- CAMPUS RESOURCES -->
+        <section style="display: flex; flex-direction: column; gap: 2rem;">
+          <h3 class="font-headline-md">Campus Resources</h3>
+          <div class="grid-connects">
+            <!-- Card 1 -->
+            <div class="glass-panel connect-card" id="card-makerspace">
+              <div class="connect-img-wrapper" style="position: relative;">
+                <img alt="Makerspace" src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400&auto=format&fit=crop"/>
+                <div class="connect-gradient"></div>
+                <span class="connect-card-tag">R&D Lab</span>
+                <span id="badge-makerspace" class="connect-card-tag status-tag" style="display: none; position: absolute; top: 1rem; right: 1rem; background: rgba(78, 222, 163, 0.2); border-color: rgba(78, 222, 163, 0.3); color: var(--color-secondary); font-weight: 600;">Registered</span>
+              </div>
+              <div class="connect-body" style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100% - 160px);">
+                <div>
+                  <h4 class="font-headline-md" style="font-size: 1.125rem;">IITD Makerspace</h4>
+                  <p class="font-body-sm">The hub for rapid prototyping, equipped with 3D printers, laser cutters, and electronics benches.</p>
+                  <div class="connect-access-box" style="margin-top: 1rem;">
+                    <p class="font-label-md text-secondary" style="font-size: 0.75rem; margin-bottom: 0.25rem;">How to access:</p>
+                    <p class="font-body-sm">Apply via the ERP portal. Mandatory 2-hour safety training workshop every Tuesday.</p>
+                  </div>
+                </div>
+                <div style="margin-top: 1.25rem;" id="action-makerspace">
+                  <button class="btn btn-secondary btn-icon-sm" onclick="openResourceModal('makerspace')" style="font-size: 0.75rem; padding: 0.5rem 1rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem;">build</span> Register for Workshop
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="glass-panel connect-card" id="card-itto">
+              <div class="connect-img-wrapper" style="position: relative;">
+                <img alt="i-TTO" src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=400&auto=format&fit=crop"/>
+                <div class="connect-gradient"></div>
+                <span class="connect-card-tag" style="background: rgba(255, 185, 95, 0.2); border-color: rgba(255, 185, 95, 0.3); color: var(--color-tertiary);">IP Support</span>
+                <span id="badge-itto" class="connect-card-tag status-tag" style="display: none; position: absolute; top: 1rem; right: 1rem; background: rgba(78, 222, 163, 0.2); border-color: rgba(78, 222, 163, 0.3); color: var(--color-secondary); font-weight: 600;">Booked</span>
+              </div>
+              <div class="connect-body" style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100% - 160px);">
+                <div>
+                  <h4 class="font-headline-md" style="font-size: 1.125rem;">i-TTO Office</h4>
+                  <p class="font-body-sm">The Industry Interface & Technology Transfer Office assists with patenting and commercialization.</p>
+                  <div class="connect-access-box" style="margin-top: 1rem;">
+                    <p class="font-label-md text-secondary" style="font-size: 0.75rem; margin-bottom: 0.25rem;">How to access:</p>
+                    <p class="font-body-sm">Book a 'Prior Art Search' session on the eDC dashboard or visit Block VI Floor 4.</p>
+                  </div>
+                </div>
+                <div style="margin-top: 1.25rem;" id="action-itto">
+                  <button class="btn btn-secondary btn-icon-sm" onclick="openResourceModal('itto')" style="font-size: 0.75rem; padding: 0.5rem 1rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem;">gavel</span> Book Prior Art Search
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="glass-panel connect-card" id="card-rd_partnership">
+              <div class="connect-img-wrapper" style="position: relative;">
+                <img alt="R&D" src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=400&auto=format&fit=crop"/>
+                <div class="connect-gradient"></div>
+                <span class="connect-card-tag">Tech Hub</span>
+                <span id="badge-rd_partnership" class="connect-card-tag status-tag" style="display: none; position: absolute; top: 1rem; right: 1rem; background: rgba(78, 222, 163, 0.2); border-color: rgba(78, 222, 163, 0.3); color: var(--color-secondary); font-weight: 600;">Under Review</span>
+              </div>
+              <div class="connect-body" style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100% - 160px);">
+                <div>
+                  <h4 class="font-headline-md" style="font-size: 1.125rem;">R&D Partnerships</h4>
+                  <p class="font-body-sm">Connects startup founders with professors and laboratories for deep-tech co-development.</p>
+                  <div class="connect-access-box" style="margin-top: 1rem;">
+                    <p class="font-label-md text-secondary" style="font-size: 0.75rem; margin-bottom: 0.25rem;">How to access:</p>
+                    <p class="font-body-sm">Submit proposal briefs to the Associate Dean of R&D at the main admin building.</p>
+                  </div>
+                </div>
+                <div style="margin-top: 1.25rem;" id="action-rd_partnership">
+                  <button class="btn btn-secondary btn-icon-sm" onclick="openResourceModal('rd_partnership')" style="font-size: 0.75rem; padding: 0.5rem 1rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem;">handshake</span> Submit Research Proposal
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="glass-panel connect-card" id="card-hpc">
+              <div class="connect-img-wrapper" style="position: relative;">
+                <img alt="HPC" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=400&auto=format&fit=crop"/>
+                <div class="connect-gradient"></div>
+                <span class="connect-card-tag" style="background: rgba(173, 198, 255, 0.2); border-color: rgba(173, 198, 255, 0.3); color: var(--color-primary);">Supercomputing</span>
+                <span id="badge-hpc" class="connect-card-tag status-tag" style="display: none; position: absolute; top: 1rem; right: 1rem; background: rgba(78, 222, 163, 0.2); border-color: rgba(78, 222, 163, 0.3); color: var(--color-secondary); font-weight: 600;">Pending Sponsor</span>
+              </div>
+              <div class="connect-body" style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100% - 160px);">
+                <div>
+                  <h4 class="font-headline-md" style="font-size: 1.125rem;">HPC Facility (Padum)</h4>
+                  <p class="font-body-sm">IIT Delhi's High Performance Computing facility provides state-of-the-art supercomputing CPU/GPU nodes for compute-intensive startup research.</p>
+                  <div class="connect-access-box" style="margin-top: 1rem;">
+                    <p class="font-label-md text-secondary" style="font-size: 0.75rem; margin-bottom: 0.25rem;">How to access:</p>
+                    <p class="font-body-sm">Apply through a faculty sponsor via the HPC user portal. Project proposal and resource budget approval are required.</p>
+                  </div>
+                </div>
+                <div style="margin-top: 1.25rem;" id="action-hpc">
+                  <button class="btn btn-secondary btn-icon-sm" onclick="openResourceModal('hpc')" style="font-size: 0.75rem; padding: 0.5rem 1rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem;">computer</span> Request Access
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="glass-panel connect-card" id="card-tech_support">
+              <div class="connect-img-wrapper" style="position: relative;">
+                <img alt="Tech Support" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=400&auto=format&fit=crop"/>
+                <div class="connect-gradient"></div>
+                <span class="connect-card-tag" style="background: rgba(173, 198, 255, 0.2); border-color: rgba(173, 198, 255, 0.3); color: var(--color-primary);">Technical Advisory</span>
+                <span id="badge-tech_support" class="connect-card-tag status-tag" style="display: none; position: absolute; top: 1rem; right: 1rem; background: rgba(78, 222, 163, 0.2); border-color: rgba(78, 222, 163, 0.3); color: var(--color-secondary); font-weight: 600;">Ticket Opened</span>
+              </div>
+              <div class="connect-body" style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100% - 160px);">
+                <div>
+                  <h4 class="font-headline-md" style="font-size: 1.125rem;">Web Setup & Tech Support</h4>
+                  <p class="font-body-sm">Need help setting up your web page, landing page, hosting your database, or deploying server infrastructure? Get support from the eDC Tech Vertical.</p>
+                  <div class="connect-access-box" style="margin-top: 1rem;">
+                    <p class="font-label-md text-secondary" style="font-size: 0.75rem; margin-bottom: 0.25rem;">How to access:</p>
+                    <p class="font-body-sm">Open a technical ticket below. Schedule a 1-on-1 consultation session with our technical vertical developers.</p>
+                  </div>
+                </div>
+                <div style="margin-top: 1.25rem;" id="action-tech_support">
+                  <button class="btn btn-secondary btn-icon-sm" onclick="openResourceModal('tech_support')" style="font-size: 0.75rem; padding: 0.5rem 1rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem;">support_agent</span> Request Tech Support
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FACULTY ADVISORY DIRECTORY -->
+        <section style="display: flex; flex-direction: column; gap: 2rem; margin-top: 2rem;">
+          <div>
+            <h3 class="font-headline-md">Faculty Advisory Directory</h3>
+            <p class="font-body-md text-on-surface-variant">Need help in specific fields? Connect with our faculties here.</p>
+          </div>
+          
+          <div class="grid-connects">
+            <!-- Faculty 1 -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(173, 198, 255, 0.1); border: 2px solid rgba(173, 198, 255, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">account_box</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: var(--color-on-surface);">Prof. Amitabha Bagchi</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-primary);">Computer Science & Eng.</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Specializes in algorithms, network science, and data structures. Validates AI/ML scalability, database architectures, and computational modeling for tech startups.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(173,198,255,0.15); color: var(--color-primary);">AI/ML Validation</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(173,198,255,0.15); color: var(--color-primary);">Algorithms</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem; border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; color: var(--color-outline);">bagchi@cse.iitd.ac.in</span>
+                <a href="mailto:bagchi@cse.iitd.ac.in" class="btn btn-secondary btn-icon-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem;">mail</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Faculty 2 -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(78, 222, 163, 0.1); border: 2px solid rgba(78, 222, 163, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-secondary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">account_box</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: var(--color-on-surface);">Prof. Brejesh Lall</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-secondary);">Electrical Engineering</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Expert in image processing, wireless communications, IoT, and cognitive radio. Advises on hardware integration, communication protocols, and smart systems design.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(78,222,163,0.15); color: var(--color-secondary);">IoT & Wireless</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(78,222,163,0.15); color: var(--color-secondary);">Hardware</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem; border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; color: var(--color-outline);">blall@ee.iitd.ac.in</span>
+                <a href="mailto:blall@ee.iitd.ac.in" class="btn btn-secondary btn-icon-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem; border-color: rgba(78, 222, 163, 0.2); color: var(--color-secondary);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem;">mail</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Faculty 3 -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(255, 185, 95, 0.1); border: 2px solid rgba(255, 185, 95, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-tertiary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">account_box</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: var(--color-on-surface);">Prof. Anurag Rathore</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-tertiary);">Chemical Eng. & Biotech</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Advises bio-pharma and MedTech startups on product formulation, process control, regulatory scaling, bio-sensor hardware, and laboratory trials.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(255,185,95,0.15); color: var(--color-tertiary);">Biotech</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(255,185,95,0.15); color: var(--color-tertiary);">MedTech</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem; border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; color: var(--color-outline);">asrathore@biotech.iitd.ac.in</span>
+                <a href="mailto:asrathore@biotech.iitd.ac.in" class="btn btn-secondary btn-icon-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem; border-color: rgba(255, 185, 95, 0.2); color: var(--color-tertiary);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem;">mail</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Faculty 4 -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(173, 198, 255, 0.1); border: 2px solid rgba(173, 198, 255, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">account_box</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: var(--color-on-surface);">Prof. Jyoti Kumar</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-primary);">Department of Design</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Specializes in interaction design, UI/UX methodology, product ergonomics, and user testing. Evaluates user-facing flows, conversion optimizations, and interface design frameworks.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(173,198,255,0.15); color: var(--color-primary);">UI/UX Design</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(173,198,255,0.15); color: var(--color-primary);">Usability</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem; border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; color: var(--color-outline);">jyoti@design.iitd.ac.in</span>
+                <a href="mailto:jyoti@design.iitd.ac.in" class="btn btn-secondary btn-icon-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem;">mail</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Faculty 5 -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(78, 222, 163, 0.1); border: 2px solid rgba(78, 222, 163, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-secondary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">account_box</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: var(--color-on-surface);">Prof. V. Ramgopal Rao</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-secondary);">Electrical Engineering</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Expert in semiconductor devices, nanotechnology, bio-MEMS sensors, and hardware product engineering. Advises deep-tech, hardware, and nanotechnology ventures on fabrication and scaling.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(78,222,163,0.15); color: var(--color-secondary);">Deep Tech</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(78,222,163,0.15); color: var(--color-secondary);">Sensors</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem; border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; color: var(--color-outline);">rrao@ee.iitd.ac.in</span>
+                <a href="mailto:rrao@ee.iitd.ac.in" class="btn btn-secondary btn-icon-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem; border-color: rgba(78, 222, 163, 0.2); color: var(--color-secondary);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem;">mail</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Faculty 6 -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(255, 185, 95, 0.1); border: 2px solid rgba(255, 185, 95, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-tertiary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">account_box</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: var(--color-on-surface);">Prof. P. Vigneswara Ilavarasan</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-tertiary);">Management Studies</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Expert in IT industry growth, mobile business models, digital economy trends, and platform policies. Guides startups on product-market fit (PMF), monetization strategies, and business models.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(255,185,95,0.15); color: var(--color-tertiary);">Biz Strategy</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(255,185,95,0.15); color: var(--color-tertiary);">FinTech</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem; border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; color: var(--color-outline);">vignes@dms.iitd.ac.in</span>
+                <a href="mailto:vignes@dms.iitd.ac.in" class="btn btn-secondary btn-icon-sm" style="font-size: 0.75rem; padding: 0.375rem 0.75rem; border-color: rgba(255, 185, 95, 0.2); color: var(--color-tertiary);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem;">mail</span> Connect
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ALUMNI SHOWCASE SECTION -->
+        <section style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1rem;">
+          <div>
+            <h3 class="font-headline-md">Alumni Startup Showcase</h3>
+            <p class="font-body-md text-on-surface-variant">Learn from the flight paths of successful IIT Delhi alumni founders across different startup verticals.</p>
+          </div>
+
+          <div class="grid-connects">
+            <!-- Card 1: AI/ML -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column; border: 1px solid var(--color-outline-variant); transition: all 0.3s ease;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(173, 198, 255, 0.1); border: 2px solid rgba(173, 198, 255, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">auto_awesome</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: #fff; margin: 0;">Mohit Aron</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-primary);">Class of 1995 (CSE) • Nutanix / Cohesity</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Known as the "Father of Hyperconverged Infrastructure". Co-founded Nutanix (Nasdaq: NTNX) and later founded Cohesity to revolutionize enterprise data management. A pioneer in distributed systems architecture.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(173,198,255,0.15); color: var(--color-primary);">AI & Data Systems</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(173,198,255,0.15); color: var(--color-primary);">$3.7B Valuation</span>
+              </div>
+              <div style="border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                <a href="https://www.cohesity.com/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); display: block; text-decoration: none; border-radius: 8px;">
+                  Website <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">north_east</span>
+                </a>
+                <a href="https://www.linkedin.com/in/mohitaron/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); display: flex; align-items: center; justify-content: center; gap: 0.25rem; text-decoration: none; border-radius: 8px; background: rgba(173, 198, 255, 0.05);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">link</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 2: IoT & Hardware -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column; border: 1px solid var(--color-outline-variant); transition: all 0.3s ease;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(78, 222, 163, 0.1); border: 2px solid rgba(78, 222, 163, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-secondary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">electric_car</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: #fff; margin: 0;">Tarun Mehta & Swapnil Jain</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-secondary);">Class of 2012 (EE) • Ather Energy</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Founded Ather Energy to build India's first intelligent, high-performance electric scooter. Built state-of-the-art battery pack assemblies, dashboard software, and a proprietary public charging grid.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(78,222,163,0.15); color: var(--color-secondary);">EV & IoT Hardware</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(78,222,163,0.15); color: var(--color-secondary);">$850M Valuation</span>
+              </div>
+              <div style="border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                <a href="https://www.atherenergy.com/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(78, 222, 163, 0.2); color: var(--color-secondary); display: block; text-decoration: none; border-radius: 8px;">
+                  Website <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">north_east</span>
+                </a>
+                <a href="https://www.linkedin.com/in/tarunmehtaather/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(78, 222, 163, 0.2); color: var(--color-secondary); display: flex; align-items: center; justify-content: center; gap: 0.25rem; text-decoration: none; border-radius: 8px; background: rgba(78, 222, 163, 0.05);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">link</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 3: Biotech -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column; border: 1px solid var(--color-outline-variant); transition: all 0.3s ease;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(255, 185, 95, 0.1); border: 2px solid rgba(255, 185, 95, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-tertiary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">science</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: #fff; margin: 0;">P. Tandon & G. Agarwal</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-tertiary);">Class of 2002 • Tata 1mg</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Co-founded 1mg, India's leading digital health platform. Scaled online pharmaceuticals delivery, centralized diagnostics services, and telehealth doctor portals, disrupting the traditional healthcare supply chain.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(255,185,95,0.15); color: var(--color-tertiary);">Biotech & MedTech</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(255,185,95,0.15); color: var(--color-tertiary);">$450M Valuation</span>
+              </div>
+              <div style="border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                <a href="https://www.1mg.com/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(255, 185, 95, 0.2); color: var(--color-tertiary); display: block; text-decoration: none; border-radius: 8px;">
+                  Website <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">north_east</span>
+                </a>
+                <a href="https://www.linkedin.com/in/prashant-tandon-8a49091/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(255, 185, 95, 0.2); color: var(--color-tertiary); display: flex; align-items: center; justify-content: center; gap: 0.25rem; text-decoration: none; border-radius: 8px; background: rgba(255, 185, 95, 0.05);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">link</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 4: Design -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column; border: 1px solid var(--color-outline-variant); transition: all 0.3s ease;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(173, 198, 255, 0.1); border: 2px solid rgba(173, 198, 255, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">palette</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: #fff; margin: 0;">Deepinder Goyal</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-primary);">Class of 2005 (Maths) • Zomato</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Founded Zomato in a hostel room. Revolutionized food discovery, dining rating, and food delivery infrastructure in India. Led design-focused loops, UI-first interactions, and hyper-local supply chain management.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(173,198,255,0.15); color: var(--color-primary);">Consumer Tech UX</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(173,198,255,0.15); color: var(--color-primary);">$12.0B Valuation</span>
+              </div>
+              <div style="border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                <a href="https://www.zomato.com/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); display: block; text-decoration: none; border-radius: 8px;">
+                  Website <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">north_east</span>
+                </a>
+                <a href="https://www.linkedin.com/in/deepindergoyal/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); display: flex; align-items: center; justify-content: center; gap: 0.25rem; text-decoration: none; border-radius: 8px; background: rgba(173, 198, 255, 0.05);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">link</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 5: Deep Tech -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column; border: 1px solid var(--color-outline-variant); transition: all 0.3s ease;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(78, 222, 163, 0.1); border: 2px solid rgba(78, 222, 163, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-secondary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">air</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: #fff; margin: 0;">Vidur Gupta</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-secondary);">Class of 2015 (ME) • NanoClean</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Commercialized advanced air filtration nanofibers developed at IIT Delhi labs. Scaled respiratory filtration masks, nasal filters, and HVAC accessories to global export networks spanning 30+ countries.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(78,222,163,0.15); color: var(--color-secondary);">Deep Tech & Materials</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(78,222,163,0.15); color: var(--color-secondary);">Growth Stage</span>
+              </div>
+              <div style="border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                <a href="https://nanoclean.in/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(78, 222, 163, 0.2); color: var(--color-secondary); display: block; text-decoration: none; border-radius: 8px;">
+                  Website <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">north_east</span>
+                </a>
+                <a href="https://www.linkedin.com/in/vidur-gupta-a50098a5/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(78, 222, 163, 0.2); color: var(--color-secondary); display: flex; align-items: center; justify-content: center; gap: 0.25rem; text-decoration: none; border-radius: 8px; background: rgba(78, 222, 163, 0.05);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">link</span> Connect
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 6: FinTech -->
+            <div class="glass-panel connect-card" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column; border: 1px solid rgba(255, 185, 95, 0.06); transition: all 0.3s ease;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 3rem; height: 3rem; border-radius: 50%; background: rgba(255, 185, 95, 0.1); border: 2px solid rgba(255, 185, 95, 0.2); display: flex; align-items: center; justify-content: center; color: var(--color-tertiary); flex-shrink: 0;">
+                  <span class="material-symbols-outlined" style="font-size: 1.75rem;">account_balance_wallet</span>
+                </div>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 600; color: #fff; margin: 0;">S. Kumar & H. Mathur</h4>
+                  <p class="font-body-sm" style="font-size: 0.75rem; color: var(--color-tertiary);">Class of 2012 • Razorpay</p>
+                </div>
+              </div>
+              <p class="font-body-sm" style="line-height: 1.5; color: var(--color-on-surface-variant); flex: 1;">Co-founded Razorpay to simplify online payments. Scaled gateway APIs, payroll services (RazorpayX), smart subscription tools, and credit infrastructure, driving over 8 million Indian merchants.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(255,185,95,0.15); color: var(--color-tertiary);">FinTech & API Platform</span>
+                <span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(255,185,95,0.15); color: var(--color-tertiary);">$7.5B Valuation</span>
+              </div>
+              <div style="border-top: 1px solid var(--color-outline-variant); padding-top: 1rem; margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                <a href="https://razorpay.com/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(255, 185, 95, 0.2); color: var(--color-tertiary); display: block; text-decoration: none; border-radius: 8px;">
+                  Website <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">north_east</span>
+                </a>
+                <a href="https://www.linkedin.com/in/harshilmathur/" target="_blank" class="btn btn-secondary btn-icon-sm text-center" style="flex: 1; font-size: 0.75rem; padding: 0.5rem; border-color: rgba(255, 185, 95, 0.2); color: var(--color-tertiary); display: flex; align-items: center; justify-content: center; gap: 0.25rem; text-decoration: none; border-radius: 8px; background: rgba(255, 185, 95, 0.05);">
+                  <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;">link</span> Connect
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Leaderboard Sidebar -->
+    <div id="leaderboard-container"></div>
+  </div>
+
+  <!-- Shared Javascript -->
+  <script src="db.js"></script>
+  <script src="xp.js"></script>
+
+  <!-- Page specific script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Campus Resources Management
+      const getCampusState = () => {
+        const saved = localStorage.getItem("campus_resources_applied");
+        return saved ? JSON.parse(saved) : {};
+      };
+
+      const updateResourceCardsUI = () => {
+        const campus = getCampusState();
+        
+        const resources = ['makerspace', 'itto', 'rd_partnership', 'hpc', 'tech_support'];
+        const buttonConfig = {
+          makerspace: { text: 'Register for Workshop', icon: 'build' },
+          itto: { text: 'Book Prior Art Search', icon: 'gavel' },
+          rd_partnership: { text: 'Submit Research Proposal', icon: 'handshake' },
+          hpc: { text: 'Request HPC Access', icon: 'computer' },
+          tech_support: { text: 'Request Tech Support', icon: 'support_agent' }
+        };
+
+        const badgeConfig = {
+          makerspace: 'Registered',
+          itto: 'Booked',
+          rd_partnership: 'Under Review',
+          hpc: 'Pending Sponsor',
+          tech_support: 'Ticket Opened'
+        };
+
+        resources.forEach(key => {
+          const badge = document.getElementById(`badge-${key}`);
+          const actionDiv = document.getElementById(`action-${key}`);
+          
+          if (campus[key]) {
+            // Applied state
+            if (badge) {
+              badge.innerText = badgeConfig[key];
+              badge.style.display = 'block';
+            }
+            if (actionDiv) {
+              actionDiv.innerHTML = `
+                <button class="btn btn-icon-sm" disabled style="font-size: 0.75rem; padding: 0.5rem 1rem; border-color: rgba(78, 222, 163, 0.4); color: var(--color-secondary); background: rgba(78, 222, 163, 0.05); width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; cursor: not-allowed;">
+                  <span class="material-symbols-outlined" style="font-size: 1rem;">check_circle</span> Application Submitted
+                </button>
+              `;
+            }
+          } else {
+            // Not applied state
+            if (badge) {
+              badge.style.display = 'none';
+            }
+            if (actionDiv) {
+              actionDiv.innerHTML = `
+                <button class="btn btn-secondary btn-icon-sm" onclick="openResourceModal('${key}')" style="font-size: 0.75rem; padding: 0.5rem 1rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary); width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                  <span class="material-symbols-outlined" style="font-size: 1rem;">${buttonConfig[key].icon}</span> ${buttonConfig[key].text}
+                </button>
+              `;
+            }
+          }
+        });
+
+        // Update Progress HUD text & bar based on resources connected
+        const completedTasks = resources.filter(key => campus[key] && campus[key].submitted).length;
+        const totalTasks = resources.length;
+        const percent = Math.round((completedTasks / totalTasks) * 100);
+
+        const percentText = document.getElementById("hud-percent-text");
+        const progressFill = document.getElementById("hud-progress-fill");
+
+        if (percentText) percentText.innerText = `${percent}%`;
+        if (progressFill) progressFill.style.width = `${percent}%`;
+      };
+
+      // Modal Open/Close
+      window.openResourceModal = (type) => {
+        const modal = document.getElementById("resource-modal");
+        const titleEl = document.getElementById("modal-title");
+        const fieldsEl = document.getElementById("form-fields");
+        const typeInput = document.getElementById("resource-type");
+
+        if (!modal || !titleEl || !fieldsEl || !typeInput) return;
+
+        typeInput.value = type;
+        modal.classList.add("active");
+
+        let titleText = "Request Access";
+        let fieldsHtml = "";
+
+        if (type === 'hpc') {
+          titleText = "HPC Facility (Padum) Allocation Request";
+          fieldsHtml = `
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Startup / Project Name</label>
+              <input type="text" class="form-input" required id="hpc-project-name" placeholder="e.g. MyTech AI">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Compute Node Tier</label>
+              <select class="form-input" style="background: rgba(29, 32, 39, 0.95);" id="hpc-tier">
+                <option value="cpu-standard">CPU Node: 16 Cores, 64GB RAM (General Compute)</option>
+                <option value="gpu-a100-single">GPU Node: 32 Cores, 1x NVIDIA A100 GPU (AI / ML)</option>
+                <option value="gpu-a100-quad">GPU Cluster: 128 Cores, 4x NVIDIA A100 GPUs (Heavy Training)</option>
+                <option value="highmem">High-Memory Node: 64 Cores, 256GB RAM (Big Data)</option>
+              </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Faculty Sponsor</label>
+              <select class="form-input" style="background: rgba(29, 32, 39, 0.95);" id="hpc-sponsor">
+                <option value="Amitabha Bagchi">Prof. Amitabha Bagchi (Computer Science)</option>
+                <option value="Brejesh Lall">Prof. Brejesh Lall (Electrical Engineering)</option>
+                <option value="Anurag Rathore">Prof. Anurag Rathore (Biotech / Chemical)</option>
+              </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Duration Required</label>
+              <select class="form-input" style="background: rgba(29, 32, 39, 0.95);" id="hpc-duration">
+                <option value="1 month">1 Month</option>
+                <option value="3 months">3 Months</option>
+                <option value="6 months">6 Months</option>
+                <option value="12 months">1 Year</option>
+              </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Technical Abstract / Compute Purpose</label>
+              <textarea class="form-textarea" required id="hpc-abstract" placeholder="Explain the computations or deep learning workflows you will run on Padum. (min. 30 characters)" minlength="30"></textarea>
+            </div>
+          `;
+        } else if (type === 'makerspace') {
+          titleText = "Makerspace Access & Workshop Registration";
+          fieldsHtml = `
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Startup / Project Name</label>
+              <input type="text" class="form-input" required id="makerspace-project-name" placeholder="e.g. MyTech AI">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Founder Entry Number</label>
+              <input type="text" class="form-input" required id="makerspace-entry" placeholder="e.g. 2024CS10234">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Preferred Safety Workshop Slot</label>
+              <select class="form-input" style="background: rgba(29, 32, 39, 0.95);" id="makerspace-slot">
+                <option value="Tuesday 2-4 PM">Tuesday 2:00 PM - 4:00 PM</option>
+                <option value="Tuesday 4-6 PM">Tuesday 4:00 PM - 6:00 PM</option>
+                <option value="Thursday 2-4 PM">Thursday 2:00 PM - 4:00 PM</option>
+              </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Special Equipment Access Required</label>
+              <input type="text" class="form-input" id="makerspace-equipment" placeholder="e.g. 3D Printer, Laser Cutter, CNC machine">
+            </div>
+          `;
+        } else if (type === 'itto') {
+          titleText = "i-TTO Consultation Booking";
+          fieldsHtml = `
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Startup / Idea Title</label>
+              <input type="text" class="form-input" required id="itto-project-name" placeholder="e.g. MyTech AI">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">IP Domain / Classification</label>
+              <select class="form-input" style="background: rgba(29, 32, 39, 0.95);" id="itto-domain">
+                <option value="software">Software / AI / Network Algorithms</option>
+                <option value="hardware">Hardware / Electronics / IoT</option>
+                <option value="biotech">Bio-Tech / Chemical / MedTech</option>
+                <option value="mechanical">Mechanical Design / Robotics</option>
+              </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Brief Summary of Technical Novelty</label>
+              <textarea class="form-textarea" required id="itto-summary" placeholder="What are the patentable details or core inventions of your startup?"></textarea>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Preferred Consultation Date</label>
+              <input type="date" class="form-input" required id="itto-date" style="color-scheme: dark;">
+            </div>
+          `;
+        } else if (type === 'rd_partnership') {
+          titleText = "Submit Research Proposal to R&D";
+          fieldsHtml = `
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Startup / Project Name</label>
+              <input type="text" class="form-input" required id="rd-project-name" placeholder="e.g. MyTech AI">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Target Department / Center</label>
+              <select class="form-input" style="background: rgba(29, 32, 39, 0.95);" id="rd-department">
+                <option value="cse">Dept of Computer Science & Engineering</option>
+                <option value="ee">Dept of Electrical Engineering</option>
+                <option value="biotech">Dept of Biochemical Eng. & Biotechnology</option>
+                <option value="mech">Dept of Mechanical Engineering</option>
+              </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Proposed Collaboration Scope</label>
+              <textarea class="form-textarea" required id="rd-scope" placeholder="How do you want to collaborate with IIT Delhi researchers or use departments' facilities?"></textarea>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Co-Development Model</label>
+              <select class="form-input" style="background: rgba(29, 32, 39, 0.95);" id="rd-model">
+                <option value="grant">Joint Funding/Grant Co-application</option>
+                <option value="consultancy">Faculty Consultancy Engagement</option>
+                <option value="licensing">Licensing IP Developed in Labs</option>
+              </select>
+            </div>
+          `;
+        } else if (type === 'tech_support') {
+          titleText = "eDC Tech Advisory & Web Setup Request";
+          fieldsHtml = `
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Startup / Project Name</label>
+              <input type="text" class="form-input" required id="tech-project-name" placeholder="e.g. MyTech AI">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Technical Platform / Stack</label>
+              <input type="text" class="form-input" required id="tech-stack" placeholder="e.g. Next.js, React, Node.js, AWS">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Tech Support Needed</label>
+              <select class="form-input" style="background: rgba(29, 32, 39, 0.95);" id="tech-need">
+                <option value="web-setup">Setting up Web Page / Website Landing Page</option>
+                <option value="deployment">Cloud Deployment & Hosting Advisory</option>
+                <option value="backend">Database & Backend Architecture Review</option>
+                <option value="credits">Request AWS/Google Cloud Startup Credits</option>
+                <option value="custom">Other Technical Advisory</option>
+              </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+              <label class="font-label-md text-secondary" style="font-size: 0.75rem;">Describe Your Technical Help Request</label>
+              <textarea class="form-textarea" required id="tech-desc" placeholder="Provide details about what web setup or developer assistance you need."></textarea>
+            </div>
+          `;
+        }
+
+        titleEl.innerText = titleText;
+        fieldsEl.innerHTML = fieldsHtml;
+      };
+
+      window.closeResourceModal = () => {
+        const modal = document.getElementById("resource-modal");
+        if (modal) {
+          modal.classList.remove("active");
+        }
+      };
+
+      window.handleResourceSubmit = (event) => {
+        event.preventDefault();
+        const type = document.getElementById("resource-type").value;
+        const campus = getCampusState();
+
+        // Save submitted state
+        campus[type] = {
+          submitted: true,
+          timestamp: new Date().toISOString()
+        };
+        localStorage.setItem("campus_resources_applied", JSON.stringify(campus));
+
+        // Dispatch events to update XP
+        window.dispatchEvent(new Event("xp-updated"));
+        if (window.updateXPUI) window.updateXPUI();
+        
+        updateResourceCardsUI();
+        closeResourceModal();
+
+        // Visual feedback / Alert
+        alert(`Application for ${type.toUpperCase()} submitted successfully! You have earned XP for starting your institutional connection.`);
+      };
+
+      // Listen for external storage changes
+      window.addEventListener("xp-updated", () => {
+        updateResourceCardsUI();
+      });
+
+      // Initial Render
+      updateResourceCardsUI();
+    });
+  </script>
+
+  <!-- Campus Resource Modal -->
+  <div id="resource-modal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 540px; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3 id="modal-title" style="font-size: 1.125rem;">Request Resource Access</h3>
+        <button class="modal-close-btn" onclick="closeResourceModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body" style="display: block; padding: 1.5rem; overflow-y: auto;">
+        <form id="resource-form" onsubmit="handleResourceSubmit(event)">
+          <input type="hidden" id="resource-type" value="">
+          <div id="form-fields" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+            <!-- Fields dynamically populated here -->
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid var(--color-outline-variant); padding-top: 1rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeResourceModal()" style="font-size: 0.8125rem; padding: 0.5rem 1rem;">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="modal-submit-btn" style="font-size: 0.8125rem; padding: 0.5rem 1rem;">Submit Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

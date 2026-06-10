@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eDC Launchpad - Book Detail</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Navigation Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content Area -->
+    <main class="main-content animate-fade-in" id="book-content-container">
+      <!-- Loader or Error screen placeholder -->
+      <div style="padding: 3rem 0; text-align: center; color: var(--color-on-surface-variant);">
+        Loading book details...
+      </div>
+    </main>
+
+    <!-- Leaderboard Sidebar -->
+    <div id="leaderboard-container"></div>
+  </div>
+
+  <!-- Shared Javascript -->
+  <script src="db.js"></script>
+  <script src="xp.js"></script>
+
+  <!-- Page specific script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookId = urlParams.get('id');
+
+      const getCompletedResources = () => {
+        const saved = localStorage.getItem("completed_resources");
+        return saved ? JSON.parse(saved) : { "lean-startup": true };
+      };
+
+      const getBookmarkedResources = () => {
+        const saved = localStorage.getItem("bookmarked_resources");
+        return saved ? JSON.parse(saved) : {};
+      };
+
+      // Load specific book
+      const book = (window.booksData || []).find(b => b.id === bookId);
+      const mainContainer = document.getElementById("book-content-container");
+
+      if (!book) {
+        if (mainContainer) {
+          mainContainer.innerHTML = `
+            <div style="max-width: 44rem; margin: 3rem auto; text-align: center; display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
+              <h2 class="font-headline-lg text-error">Book Not Found</h2>
+              <p class="font-body-lg text-on-surface-variant">The book you are looking for does not exist in our library.</p>
+              <a href="explore.html" class="btn btn-primary">Return to Explore</a>
+            </div>
+          `;
+        }
+        return;
+      }
+
+      // Render book details
+      const renderBookDetails = () => {
+        const completed = getCompletedResources();
+        const bookmarks = getBookmarkedResources();
+
+        const isDone = completed[book.id];
+        const isBookmarked = bookmarks[book.id];
+
+        // 3 similar books
+        const similar = (window.booksData || [])
+          .filter(b => b.id !== book.id)
+          .slice(0, 3);
+
+        mainContainer.innerHTML = `
+          <div class="detail-layout">
+            <!-- Back Nav -->
+            <a href="explore.html" class="btn btn-secondary btn-icon-sm" style="width: fit-content; border: none; padding-left: 0; display: flex; align-items: center; gap: 0.5rem; color: var(--color-primary);">
+              <span class="material-symbols-outlined" style="font-size: 1.25rem;">arrow_back</span>
+              Back to Explore
+            </a>
+
+            <!-- Header Panel -->
+            <div class="glass-panel book-header-panel">
+              <!-- Large Cover -->
+              <div class="book-cover-large">
+                <img src="${book.coverUrl}" alt="${book.title}">
+                ${isDone ? `
+                  <div class="card-check" style="top: 0.75rem; right: 0.75rem;">
+                    <span class="material-symbols-outlined text-sm font-bold">check</span>
+                  </div>
+                ` : ''}
+                <div class="card-xp-badge" style="bottom: 0.75rem; left: 0.75rem;">+${book.xp} XP</div>
+              </div>
+
+              <!-- Information column -->
+              <div class="book-info-col">
+                <div>
+                  <span class="type-tag">📖 ${book.type}</span>
+                  <h1 class="font-headline-lg" style="margin-top: 0.5rem; line-height: 1.2;">${book.title}</h1>
+                  <p class="font-body-md" style="margin-top: 0.25rem;">By <span class="text-primary font-label-md">${book.author}</span></p>
+                </div>
+
+                <div class="meta-stats-row">
+                  <div class="meta-stat">
+                    <span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1">star</span>
+                    <strong>${book.rating}</strong>
+                    <span>(${book.reviews} reviews)</span>
+                  </div>
+                  <div class="meta-stat">
+                    <span class="material-symbols-outlined">bar_chart</span>
+                    <span>${book.difficulty}</span>
+                  </div>
+                  <div class="meta-stat">
+                    <span class="material-symbols-outlined">schedule</span>
+                    <span>${book.time}</span>
+                  </div>
+                </div>
+
+                <div class="stage-tags-row">
+                  ${book.stage.map(stg => `<span class="stage-tag">${stg}</span>`).join('')}
+                </div>
+
+                <div class="actions-row">
+                  ${isDone ? `
+                    <button class="btn btn-completed" style="flex: 1;"><span class="material-symbols-outlined font-bold" style="font-size: 1rem;">check</span>Completed (+${book.xp} XP)</button>
+                  ` : `
+                    <button class="btn btn-primary" style="flex: 1;" onclick="handleMarkCompleted()"><span class="material-symbols-outlined font-bold" style="font-size: 1rem;">check</span>Mark as Done</button>
+                  `}
+
+                  <button class="btn btn-secondary ${isBookmarked ? 'btn-bookmark-active' : ''}" style="display: flex; gap: 0.5rem;" onclick="handleToggleBookmark()">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${isBookmarked ? 1 : 0}; font-size: 1.125rem;">bookmark</span>
+                    <span>${isBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="glass-panel info-panel">
+              <h2>📝 About This Book</h2>
+              <p class="about-text">${book.description}</p>
+              
+              ${book.keyTakeaways && book.keyTakeaways.length > 0 ? `
+                <div style="margin-top: 1.5rem;">
+                  <h3 class="font-label-md" style="margin-bottom: 0.75rem; color: var(--color-on-surface);">Key Takeaways:</h3>
+                  <div class="bullets-grid">
+                    ${book.keyTakeaways.map(t => `
+                      <div class="bullet-li">
+                        <span class="bullet-dot">•</span>
+                        <span>${t}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- PDF Viewer Embedded -->
+            <div class="glass-panel info-panel">
+              <div class="pdf-viewer-header">
+                <h2 style="border: none; padding-bottom: 0; margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span class="material-symbols-outlined text-primary" style="font-size: 1.5rem;">menu_book</span>
+                  📄 Read / Preview
+                </h2>
+                <div style="display: flex; gap: 0.75rem;">
+                  <a href="${book.pdfPath}" target="_blank" rel="noreferrer" class="btn btn-secondary btn-icon-sm" style="display: flex; align-items: center; gap: 0.25rem;">
+                    <span class="material-symbols-outlined" style="font-size: 0.875rem;">open_in_new</span>
+                    Open in Tab
+                  </a>
+                  <a href="${book.pdfPath}" download class="btn btn-primary btn-icon-sm" style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem;">
+                    <span class="material-symbols-outlined" style="font-size: 0.875rem;">download</span>
+                    Download PDF
+                  </a>
+                </div>
+              </div>
+              
+              <!-- PDF Iframe -->
+              <div class="pdf-iframe-container">
+                <iframe src="${book.pdfPath}" title="${book.title}" allow="autoplay"></iframe>
+              </div>
+            </div>
+
+            <!-- Similar Books Section -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <h2 class="font-headline-md">📚 Similar Books</h2>
+              <div class="grid-similar">
+                ${similar.map(sim => {
+                  const isSimDone = completed[sim.id];
+                  return `
+                    <div class="glass-card similar-card" onclick="window.location.href='book.html?id=${sim.id}'; window.scrollTo({top: 0, behavior: 'smooth'});">
+                      <div class="similar-cover">
+                        <img src="${sim.coverUrl}" alt="${sim.title}">
+                        ${isSimDone ? `
+                          <div class="card-check" style="width: 1.25rem; height: 1.25rem; top: 0.25rem; right: 0.25rem;">
+                            <span class="material-symbols-outlined text-[10px] font-bold">check</span>
+                          </div>
+                        ` : ''}
+                      </div>
+                      <div class="similar-info">
+                        <div>
+                          <h4>${sim.title}</h4>
+                          <p class="font-body-sm" style="font-size: 0.6875rem;">By ${sim.author}</p>
+                        </div>
+                        <div class="similar-footer">
+                          <span>+${sim.xp} XP</span>
+                          <span style="color: var(--color-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">${sim.difficulty}</span>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+          </div>
+        `;
+      };
+
+      // Handler functions
+      window.handleMarkCompleted = () => {
+        const completed = getCompletedResources();
+        completed[book.id] = true;
+        localStorage.setItem("completed_resources", JSON.stringify(completed));
+        window.dispatchEvent(new Event("xp-updated"));
+        if (window.updateXPUI) window.updateXPUI();
+        renderBookDetails();
+      };
+
+      window.handleToggleBookmark = () => {
+        const bookmarks = getBookmarkedResources();
+        bookmarks[book.id] = !bookmarks[book.id];
+        localStorage.setItem("bookmarked_resources", JSON.stringify(bookmarks));
+        window.dispatchEvent(new Event("xp-updated"));
+        if (window.updateXPUI) window.updateXPUI();
+        renderBookDetails();
+      };
+
+      // Initial Render
+      renderBookDetails();
+    });
+  </script>
+</body>
+</html>

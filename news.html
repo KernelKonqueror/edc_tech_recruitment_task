@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eDC Launchpad - Ecosystem News Hub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Navigation Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content Area -->
+    <main class="main-content animate-fade-in">
+      <div class="space-y-12" style="display: flex; flex-direction: column; gap: 2.5rem; max-width: 100%; margin: 0 auto;">
+        
+        <!-- Header -->
+        <div style="border-bottom: 1px solid var(--color-outline-variant); padding-bottom: 1.5rem;">
+          <h1 class="font-headline-lg">Ecosystem News Hub</h1>
+          <p class="font-body-lg" style="margin-top: 0.25rem;">Live updates on startup fundings, events, and milestones inside IIT Delhi.</p>
+        </div>
+
+        <!-- Featured Story Section -->
+        <div class="news-featured-panel" id="featured-news-container">
+          <!-- Rendered dynamically by script -->
+        </div>
+
+        <!-- Search & Filters Container -->
+        <div style="display: flex; flex-direction: column; gap: 1.25rem; background: rgba(var(--glass-color-rgb),0.02); padding: 1.25rem; border-radius: 1.25rem; border: 1px solid var(--color-outline-variant); margin-top: 1rem;">
+          <div style="position: relative; width: 100%;">
+            <span class="material-symbols-outlined" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--color-outline);">search</span>
+            <input type="text" id="news-search" class="form-input" placeholder="Search news updates, milestones, and announcements..." style="width: 100%; box-sizing: border-box; padding-left: 2.75rem;">
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div class="tabs-row" style="display: flex; gap: 0.5rem; flex-wrap: wrap; border-bottom: none; padding-bottom: 0;">
+              <button class="tab-btn active" data-category="all" style="padding: 0.4rem 1rem; border-radius: 0.5rem; font-size: 0.85rem;">All News</button>
+              <button class="tab-btn" data-category="funding" style="padding: 0.4rem 1rem; border-radius: 0.5rem; font-size: 0.85rem;">Funding</button>
+              <button class="tab-btn" data-category="event" style="padding: 0.4rem 1rem; border-radius: 0.5rem; font-size: 0.85rem;">Events</button>
+              <button class="tab-btn" data-category="achievement" style="padding: 0.4rem 1rem; border-radius: 0.5rem; font-size: 0.85rem;">Achievements</button>
+              <button class="tab-btn" data-category="saved" style="padding: 0.4rem 1rem; border-radius: 0.5rem; font-size: 0.85rem; display: flex; align-items: center; gap: 0.25rem;">
+                <span class="material-symbols-outlined" style="font-size: 0.95rem;">bookmark</span> Saved
+              </button>
+            </div>
+            
+            <!-- Share Milestone CTA -->
+            <button onclick="openShareMilestoneModal()" class="btn btn-primary" style="font-size: 0.8125rem; padding: 0.55rem 1.125rem; border-radius: 0.75rem; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.375rem; box-shadow: 0 0 15px rgba(138, 75, 243, 0.25);">
+              <span class="material-symbols-outlined" style="font-size: 1.125rem;">add_circle</span> Share Milestone
+            </button>
+          </div>
+        </div>
+
+        <!-- Main News Layout Grid -->
+        <div class="news-page-grid" style="margin-top: 1rem;">
+          
+          <!-- Left Column: News Feed -->
+          <div style="display: flex; flex-direction: column; gap: 2rem;">
+            <!-- News Items Feed Container -->
+            <div class="news-layout" id="news-feed-container" style="display: flex; flex-direction: column; gap: 2.5rem;">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Right Column: Sidebar (Ecosystem Pulse & Quick Links) -->
+          <div style="display: flex; flex-direction: column; gap: 2rem;">
+            
+            <!-- Ecosystem Pulse Card -->
+            <div class="glass-panel" style="border-radius: 1.5rem; padding: 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
+              <h3 class="font-headline-md" style="font-size: 1.125rem; display: flex; align-items: center; gap: 0.5rem; color: var(--color-primary); margin: 0;">
+                <span class="material-symbols-outlined" style="font-size: 1.35rem;">insights</span>
+                Ecosystem Pulse
+              </h3>
+              <div style="display: flex; flex-direction: column;">
+                <div class="pulse-stat-row">
+                  <span class="font-body-md text-on-surface-variant">Funding Raised (Q2)</span>
+                  <strong class="text-secondary" style="font-size: 1.125rem;">₹18.5 Cr</strong>
+                </div>
+                <div class="pulse-stat-row">
+                  <span class="font-body-md text-on-surface-variant">Incubated Startups</span>
+                  <strong class="text-primary" style="font-size: 1.125rem;">42 Active</strong>
+                </div>
+                <div class="pulse-stat-row">
+                  <span class="font-body-md text-on-surface-variant">Active Patents Filed</span>
+                  <strong class="text-tertiary" style="font-size: 1.125rem;">12 Filed</strong>
+                </div>
+                <div class="pulse-stat-row">
+                  <span class="font-body-md text-on-surface-variant">Upcoming Bootcamps</span>
+                  <strong style="font-size: 1.125rem; color: var(--color-on-surface);">3 Scheduled</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ecosystem Calendar Widget -->
+            <div class="glass-panel" style="border-radius: 1.5rem; padding: 1.75rem; display: flex; flex-direction: column; gap: 1rem;">
+              <h3 class="font-headline-md" style="font-size: 1.125rem; display: flex; align-items: center; gap: 0.5rem; color: var(--color-secondary); margin: 0;">
+                <span class="material-symbols-outlined" style="font-size: 1.35rem;">calendar_month</span>
+                Ecosystem Calendar
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 0.875rem;" id="calendar-events-container">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+          </div>
+        </div>  </div>
+
+
+            
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Right-hand Leaderboard placeholder element (kept for script compatibility, hidden by style.css rules) -->
+    <div id="leaderboard-container" style="display: none;"></div>
+  </div>
+
+
+
+  <!-- Shared Javascript -->
+  <script src="db.js"></script>
+  <script src="xp.js"></script>
+
+  <!-- Page specific script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // News Database
+      const newsItems = [
+        {
+          date: "Today — Campus News",
+          articles: [
+            {
+              category: "achievement",
+              title: "Geliose Mobility launches ‘HOPE’ electric scooter",
+              desc: "Geliose Mobility, an IIT Delhi incubated startup, has launched ‘HOPE’, an affordable electric scooter for last mile delivery and personal commute with a running cost around 20 Paisa/km.",
+              time: "New",
+              readTime: "2 min read",
+              highlights: ["IITD Incubated", "Geliose Mobility", "EV"],
+              url: "https://home.iitd.ac.in/news-escooter.php"
+            },
+            {
+              category: "achievement",
+              title: "Antimicrobial Water Storage Containers ‘AqCure’",
+              desc: "Mixing traditional science with nanotechnology, IIT Delhi-incubated startup Nanosafe Solutions has developed a range of antimicrobial water storage containers.",
+              time: "Recent",
+              readTime: "3 min read",
+              highlights: ["Nanosafe Solutions", "Nanotechnology"],
+              url: "https://home.iitd.ac.in/press-antim.php"
+            }
+          ]
+        },
+        {
+          date: "Earlier — Campus News",
+          articles: [
+            {
+              category: "achievement",
+              title: "E-TEX and Clensta Launch Antiviral Protection Kit",
+              desc: "Two IIT Delhi incubated startups E-TEX and Clensta have teamed up to launch an antiviral protection kit for masses.",
+              time: "Archived",
+              readTime: "2 min read",
+              highlights: ["E-TEX", "Clensta", "Healthcare"],
+              url: "https://home.iitd.ac.in/startup-etex.php"
+            },
+            {
+              category: "achievement",
+              title: "Fabiosys Innovations Develops Antiviral Fabric",
+              desc: "Fabiosys Innovations, an IIT Delhi Startup, Develops Technology to Manufacture Extremely Affordable and Highly Effective Antiviral Fabric.",
+              time: "Archived",
+              readTime: "3 min read",
+              highlights: ["Fabiosys Innovations", "Deep Tech"],
+              url: "https://home.iitd.ac.in/show.php?id=3&in_sections=Startups"
+            }
+          ]
+        }
+      ];
+
+      let currentCategory = 'all';
+
+      // Bookmarks helper functions
+      const getBookmarks = () => {
+        const bookmarks = localStorage.getItem("bookmarked_articles");
+        return bookmarks ? JSON.parse(bookmarks) : {};
+      };
+
+      window.toggleBookmark = (title) => {
+        const bookmarks = getBookmarks();
+        if (bookmarks[title]) {
+          delete bookmarks[title];
+        } else {
+          bookmarks[title] = true;
+        }
+        localStorage.setItem("bookmarked_articles", JSON.stringify(bookmarks));
+        renderNews();
+      };
+
+      // Merging static news with user-submitted custom milestones
+      const getMergedNewsItems = () => {
+        const cloned = JSON.parse(JSON.stringify(newsItems));
+        
+        // Load custom milestones
+        const customs = localStorage.getItem("custom_milestones");
+        const customsList = customs ? JSON.parse(customs) : [];
+        
+        if (customsList.length > 0 && cloned.length > 0) {
+          cloned[0].articles = [...customsList, ...cloned[0].articles];
+        }
+        return cloned;
+      };
+
+      // Ecosystem Calendar Definition
+      const calendarEvents = [
+        {
+          id: "patent-filing",
+          title: "Patent Filing Bootcamp",
+          date: "Saturday, June 13",
+          time: "09:30 AM",
+          location: "Block VI, IITD",
+          month: "Jun",
+          day: "13",
+          colorClass: "primary",
+          bgLight: "rgba(173,198,255,0.1)"
+        },
+        {
+          id: "safety-training",
+          title: "Makerspace Safety Training",
+          date: "Wednesday, June 17",
+          time: "10:00 AM",
+          location: "Main Workshop",
+          month: "Jun",
+          day: "17",
+          colorClass: "secondary",
+          bgLight: "rgba(78,222,163,0.1)"
+        },
+        {
+          id: "pitch-day",
+          title: "Pre-Seed Pitch Day",
+          date: "Monday, June 22",
+          time: "02:00 PM",
+          location: "Seminar Hall",
+          month: "Jun",
+          day: "22",
+          colorClass: "tertiary",
+          bgLight: "rgba(255,185,95,0.1)"
+        }
+      ];
+
+      const renderEcosystemCalendar = () => {
+        const container = document.getElementById("calendar-events-container");
+        if (!container) return;
+
+        const savedEvents = localStorage.getItem("registered_events");
+        const registeredEvents = savedEvents ? JSON.parse(savedEvents) : {};
+
+        container.innerHTML = calendarEvents.map(event => {
+          const isRegistered = !!registeredEvents[event.id];
+          return `
+            <div class="glass-card flex justify-between items-center gap-3" style="padding: 1rem; border: 1px solid var(--color-outline-variant); border-radius: 1rem; background: var(--color-outline-variant);">
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start; flex: 1;">
+                <div style="background: ${event.bgLight}; color: var(--color-${event.colorClass}); width: 2.75rem; height: 2.75rem; border-radius: 0.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--font-family-display);">
+                  <span style="font-size: 0.625rem; font-weight: bold; text-transform: uppercase;">${event.month}</span>
+                  <span style="font-size: 1.125rem; font-weight: bold; line-height: 1;">${event.day}</span>
+                </div>
+                <div style="flex: 1;">
+                  <h4 style="font-size: 0.8125rem; font-weight: 600; color: var(--color-on-surface); margin: 0 0 0.125rem 0;">${event.title}</h4>
+                  <p class="font-body-sm" style="font-size: 0.6875rem; color: var(--text-secondary); margin: 0;">${event.time} • ${event.location}</p>
+                </div>
+              </div>
+              <div style="flex-shrink: 0;">
+                ${isRegistered ? `
+                  <span class="flex items-center gap-1" style="font-size: 0.6875rem; color: #34d399; font-weight: 600; background: rgba(52, 211, 153, 0.1); padding: 0.35rem 0.65rem; border-radius: 0.5rem;">
+                    <span class="material-symbols-outlined" style="font-size: 0.8125rem;">check_circle</span> Registered
+                  </span>
+                ` : `
+                  <button onclick="window.openRegisterEventModal('${event.id}', '${event.title.replace(/'/g, "\\'")}', '${event.date}', '${event.time}')" class="btn btn-secondary btn-icon-sm" style="font-size: 0.6875rem; padding: 0.35rem 0.65rem; border-radius: 0.5rem; border-color: var(--color-outline-variant); cursor: pointer;">
+                    Register
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join("");
+      };
+
+      // Render Featured News Story
+      const renderFeaturedNews = () => {
+        const featuredContainer = document.getElementById("featured-news-container");
+        if (!featuredContainer) return;
+
+        const merged = getMergedNewsItems();
+        let featured = null;
+        for (let group of merged) {
+          if (group.articles && group.articles.length > 0) {
+            featured = group.articles[0];
+            break;
+          }
+        }
+
+        if (!featured) {
+          featuredContainer.style.display = "none";
+          return;
+        }
+
+        let featuredDomain = "iitd.ac.in";
+        try {
+          if (featured.url && featured.url !== "#") {
+            featuredDomain = new URL(featured.url).hostname.replace('www.', '');
+          }
+        } catch (e) {
+          featuredDomain = "external link";
+        }
+
+        featuredContainer.style.display = "flex";
+        featuredContainer.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 52rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+              <span class="news-pill ${featured.category}">Featured highlight</span>
+              <span class="font-body-sm" style="color: var(--color-outline); font-weight: 500;">${featured.time} • ${featured.readTime}</span>
+              <a href="${featured.url || '#'}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--color-primary); text-decoration: none; display: flex; align-items: center; gap: 0.25rem; background: rgba(var(--glass-color-rgb),0.05); padding: 2px 8px; border-radius: 4px;">
+                <span class="material-symbols-outlined" style="font-size: 0.875rem;">link</span>
+                ${featuredDomain}
+              </a>
+            </div>
+            <h2 class="font-display-lg" style="font-size: 1.85rem; line-height: 1.25; margin-top: 0.25rem; color: var(--color-on-surface); margin-bottom: 0;">
+              <a href="${featured.url || '#'}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: color 0.2s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='var(--color-on-surface)'">
+                ${featured.title}
+                <span class="material-symbols-outlined" style="font-size: 1.5rem; opacity: 0.5;">north_east</span>
+              </a>
+            </h2>
+            <p class="font-body-lg" style="margin-top: 0.25rem; line-height: 1.6; font-size: 0.9375rem; color: var(--color-on-surface-variant);">${featured.desc}</p>
+            <div style="display: flex; gap: 1rem; margin-top: 0.5rem; align-items: center; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-icon-sm" onclick="window.open('${featured.url || '#'}', '_blank')" style="border-color: var(--color-outline-variant); font-size: 0.75rem; padding: 0.375rem 1rem;">Read Full Coverage</button>
+              <div style="display: flex; gap: 0.5rem;">
+                ${featured.highlights.map(h => `<span class="stage-tag" style="font-size: 0.625rem; border-color: rgba(173, 198, 255, 0.2); color: var(--color-primary);">${h}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      };
+ 
+      // Render News Feed
+      const renderNews = () => {
+        const container = document.getElementById("news-feed-container");
+        if (!container) return;
+ 
+        const searchInput = document.getElementById("news-search");
+        const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : "";
+        const bookmarks = getBookmarks();
+        const merged = getMergedNewsItems();
+
+        let hasArticles = false;
+ 
+        const html = merged.map(group => {
+          // Filter articles in group
+          const filteredArticles = group.articles.filter(article => {
+            const matchesCategory = currentCategory === 'all' || 
+                                    (currentCategory === 'saved' && bookmarks[article.title]) || 
+                                    article.category === currentCategory;
+            
+            const matchesSearch = article.title.toLowerCase().includes(searchQuery) ||
+                                  article.desc.toLowerCase().includes(searchQuery) ||
+                                  article.highlights.some(h => h.toLowerCase().includes(searchQuery));
+                                  
+            return matchesCategory && matchesSearch;
+          });
+ 
+          if (filteredArticles.length === 0) return '';
+          hasArticles = true;
+ 
+          return `
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+              <h3 class="news-date-header">${group.date}</h3>
+              <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                ${filteredArticles.map(article => {
+                  const isBookmarked = !!bookmarks[article.title];
+                  let domainName = "iitd.ac.in";
+                  try {
+                    if (article.url && article.url !== "#") {
+                      domainName = new URL(article.url).hostname.replace('www.', '');
+                    }
+                  } catch (e) {
+                    domainName = "external link";
+                  }
+                  
+                  return `
+                    <div class="news-card-revamped ${article.category}">
+                      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                        <div style="display: flex; gap: 0.75rem; align-items: center;">
+                          <div class="news-icon-badge ${article.category}">
+                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">
+                              ${article.category === 'funding' ? 'payments' : article.category === 'event' ? 'calendar_today' : 'workspace_premium'}
+                            </span>
+                          </div>
+                          <div>
+                            <span class="news-pill ${article.category}">${article.category}</span>
+                          </div>
+                        </div>
+                        <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.125rem;">
+                          <span class="font-body-sm" style="font-size: 0.6875rem; color: var(--color-outline); font-weight: 500;">${article.time}</span>
+                          <span class="font-body-sm" style="font-size: 0.625rem; opacity: 0.6;">${article.readTime}</span>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h3 class="font-headline-md" style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.375rem;">
+                          <a href="${article.url || '#'}" target="_blank" rel="noopener noreferrer" style="color: var(--color-on-surface); text-decoration: none; display: inline-flex; align-items: center; gap: 0.375rem; transition: color 0.2s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='var(--color-on-surface)'">
+                            ${article.title}
+                            <span class="material-symbols-outlined" style="font-size: 1rem; opacity: 0.5;">north_east</span>
+                          </a>
+                        </h3>
+                        
+                        <!-- Domain source link -->
+                        <div style="display: flex; align-items: center; gap: 0.25rem; margin-bottom: 0.75rem; margin-top: -0.125rem;">
+                          <span class="material-symbols-outlined" style="font-size: 0.875rem; color: var(--color-primary);">link</span>
+                          <a href="${article.url || '#'}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; font-family: monospace;" onmouseover="this.style.textDecoration='underline'; this.style.color='var(--color-primary)';" onmouseout="this.style.textDecoration='none'; this.style.color='var(--text-secondary)';">
+                            ${domainName}
+                          </a>
+                        </div>
+                        
+                        <p class="font-body-md text-on-surface-variant" style="line-height: 1.5; font-size: 0.875rem; margin-bottom: 0.5rem;">${article.desc}</p>
+                      </div>
+ 
+                      ${article.highlights ? `
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem; margin-bottom: 0.25rem;">
+                          ${article.highlights.map(h => `<span class="stage-tag" style="font-size: 0.625rem; opacity: 0.85; border-color: var(--color-outline-variant);">${h}</span>`).join('')}
+                        </div>
+                      ` : ''}
+                      
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; border-top: 1px solid var(--color-outline-variant); padding-top: 0.75rem;">
+                        <a href="${article.url || '#'}" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary); font-size: 0.75rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.25rem;">
+                          Read Coverage <span class="material-symbols-outlined" style="font-size: 0.875rem;">arrow_forward</span>
+                        </a>
+                        <div style="display: flex; gap: 0.5rem;">
+                          <button class="btn btn-secondary btn-icon-sm" onclick="window.toggleBookmark('${article.title.replace(/'/g, "\\'")}')" style="border: none; padding: 0.25rem; border-radius: 50%; width: 1.75rem; height: 1.75rem; min-height: 0; display: flex; align-items: center; justify-content: center; background: ${isBookmarked ? 'rgba(138, 75, 243, 0.15)' : 'var(--color-outline-variant)'}; color: ${isBookmarked ? 'var(--color-primary)' : 'var(--text-secondary)'};" title="${isBookmarked ? 'Unsave article' : 'Save article'}">
+                            <span class="material-symbols-outlined" style="font-size: 1rem;">${isBookmarked ? 'bookmark' : 'bookmark_border'}</span>
+                          </button>
+                          <button class="btn btn-secondary btn-icon-sm" onclick="event.stopPropagation(); navigator.clipboard.writeText('${article.url || '#'}').then(() => alert('Share link copied to clipboard!'))" style="border: none; padding: 0.25rem; border-radius: 50%; width: 1.75rem; height: 1.75rem; min-height: 0; display: flex; align-items: center; justify-content: center; background: var(--color-outline-variant); color: var(--text-secondary);" title="Share article">
+                            <span class="material-symbols-outlined" style="font-size: 1rem;">share</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+ 
+        if (!hasArticles) {
+          if (currentCategory === 'saved') {
+            container.innerHTML = `
+              <div style="padding: 4rem 1rem; text-align: center; color: var(--text-secondary); background: rgba(var(--glass-color-rgb),0.01); border-radius: 1.25rem; border: 1px dashed var(--color-outline-variant);">
+                <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 1rem; color: var(--color-primary);">bookmark_border</span>
+                <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 0.25rem;">No saved articles</h4>
+                <p style="font-size: 0.875rem;">Bookmark updates from the feed to save them here for reading later.</p>
+              </div>
+            `;
+          } else {
+            container.innerHTML = `
+              <div style="padding: 4rem 1rem; text-align: center; color: var(--text-secondary); background: rgba(var(--glass-color-rgb),0.01); border-radius: 1.25rem; border: 1px dashed var(--color-outline-variant);">
+                <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 1rem; color: var(--accent-orange);">search_off</span>
+                <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 0.25rem;">No matching articles</h4>
+                <p style="font-size: 0.875rem;">Try adjusting your search query or filters.</p>
+              </div>
+            `;
+          }
+        } else {
+          container.innerHTML = html;
+        }
+      };
+ 
+      // Search input handler
+      const searchInputEl = document.getElementById("news-search");
+      if (searchInputEl) {
+        searchInputEl.addEventListener("input", renderNews);
+      }
+ 
+      // Tab selector bindings
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentCategory = btn.getAttribute("data-category");
+          renderNews();
+        });
+      });
+ 
+      // Listen to updates from modals
+      window.addEventListener("news-updated", () => {
+        renderNews();
+        renderFeaturedNews();
+      });
+
+      window.addEventListener("calendar-updated", () => {
+        renderEcosystemCalendar();
+      });
+ 
+      // Initialize page
+      renderNews();
+      renderFeaturedNews();
+      renderEcosystemCalendar();
+    });
+  </script>
+</body>
+</html>
