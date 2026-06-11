@@ -1,6 +1,8 @@
 # eDC Launchpad - Knowledge Base Rethink
 **Technology Vertical Recruitment Task 2026**
 
+**deployed on git pages**
+
 ---
 
 ## 1. Problem Being Solved
